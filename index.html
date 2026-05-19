@@ -867,7 +867,82 @@
     opacity: 0.8;
   }
 
-  /* ── FULLSCREEN BUTTON ── */
+  /* ── FULLSCREEN SCALING ── */
+  :fullscreen .wrapper,
+  :-webkit-full-screen .wrapper {
+    min-height: 100vh;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  :fullscreen .grid-container,
+  :-webkit-full-screen .grid-container {
+    max-width: 100%;
+  }
+
+  :fullscreen .grid-wrapper,
+  :-webkit-full-screen .grid-wrapper {
+    min-width: unset;
+    width: 100%;
+  }
+
+  :fullscreen table,
+  :-webkit-full-screen table {
+    font-size: 1.2em;
+  }
+
+  :fullscreen .boss-bar,
+  :fullscreen .hp-bar-wrap,
+  :-webkit-full-screen .boss-bar,
+  :-webkit-full-screen .hp-bar-wrap {
+    max-width: 100%;
+  }
+
+  :fullscreen .title-main,
+  :-webkit-full-screen .title-main {
+    font-size: clamp(32px, 5vw, 64px);
+  }
+
+  :fullscreen .game-cell,
+  :-webkit-full-screen .game-cell {
+    height: 68px;
+  }
+
+  :fullscreen .col-header,
+  :-webkit-full-screen .col-header {
+    height: 68px;
+  }
+
+  :fullscreen .row-header,
+  :-webkit-full-screen .row-header {
+    height: 68px;
+    width: 130px;
+  }
+
+  :fullscreen .col-header-text,
+  :-webkit-full-screen .col-header-text {
+    font-size: clamp(11px, 1.8vw, 16px);
+  }
+
+  :fullscreen .row-header-text,
+  :-webkit-full-screen .row-header-text {
+    font-size: clamp(10px, 1.4vw, 14px);
+  }
+
+  :fullscreen .heart-icon,
+  :-webkit-full-screen .heart-icon {
+    font-size: clamp(24px, 3.5vw, 34px);
+  }
+
+  :fullscreen .boss-name,
+  :-webkit-full-screen .boss-name {
+    font-size: clamp(16px, 2.5vw, 26px);
+  }
+
+  :fullscreen .boss-avatar,
+  :-webkit-full-screen .boss-avatar {
+    font-size: 52px;
+  }
   .fullscreen-btn {
     position: fixed;
     top: 12px;
@@ -1546,9 +1621,11 @@ function shakeScreen() {
 // ── HP BAR ─────────────────────────────────────────────────
 
 function updateHPBar() {
-  const total = TOTAL_VISIBLE + (hiddenRevealed ? TOTAL_HIDDEN : 0);
+  // Before reveal: bar is based only on visible hearts (starts at 100%)
+  // After reveal: hidden hearts are added to the total
+  const total = hiddenRevealed ? TOTAL_VISIBLE + TOTAL_HIDDEN : TOTAL_VISIBLE;
   const remaining = (TOTAL_VISIBLE - hitCells.size) + (hiddenRevealed ? TOTAL_HIDDEN - hiddenHit.size : 0);
-  const pct = Math.max(0, Math.round((remaining / (TOTAL_VISIBLE + TOTAL_HIDDEN)) * 100));
+  const pct = Math.max(0, Math.round((remaining / total) * 100));
   const fill = document.getElementById('hpFill');
   const pctEl = document.getElementById('hpPct');
   fill.style.width = pct + '%';
